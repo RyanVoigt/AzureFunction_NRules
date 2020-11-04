@@ -71,14 +71,16 @@ namespace Manulife
 
             JObject data = JObject.Parse(requestBody);
             string Name = (string)data.SelectToken("Name");
-            bool Age = (bool)data.SelectToken("Age");
+            int Age = (int)data.SelectToken("Age");
             string Occupation = (string)data.SelectToken("Occupation");
-            string Occupation = (string)data.SelectToken("Gender");
+            string Gender = (string)data.SelectToken("Gender");
             JArray PreExisingConditions = (JArray)data.SelectToken("PreExisingConditions");
             bool IsSmoker = (bool)data.SelectToken("IsSmoker");
             int MSinceHospital = (int)data.SelectToken("MSinceHospital");
             int PolicyMaximum = (int)data.SelectToken("PolicyMaximum");
-            bool LookingForNewRate = (bool)data.SelectToken("LookingForNewRate");
+            bool EligibleForNewRate = (bool)data.SelectToken("EligibleForNewRate");
+            string InsuranceType = (string)data.SelectToken("InsuranceType");
+            int ID = (int)data.SelectToken("ID");
             
             /*{
             "Name": "",
@@ -88,8 +90,10 @@ namespace Manulife
             "PreExisingConditions": ["", ""],
             "IsSmoker": ,
             "MSinceHospital": ,
-            "LookingForNewRate": ,
-            "LookingForNewRate": ,
+            "EligibleForNewRate": ,
+            "PolicyMaximum": ,
+            "InsuranceType": "",
+            "ID":
             }*/
             
             //Load rules
@@ -103,11 +107,14 @@ namespace Manulife
             var session = factory.CreateSession();
                         
             //Load domain model
-            var customer = new Customer(Name, IsPreferred, IsSmoker, MSinceHospital, PreExisingConditions.ToObject<string[]>(), ReasonForHospitalVisit, LookingForNewRate);
+            var customer = new Customer(Name, Age, Occupation, Gender, PreExisingConditions.ToObject<string[]>(), IsSmoker, MSinceHospital, EligibleForNewRate, PolicyMaximum, InsuranceType, ID);
             //var rate = new Rate(ID, customer, RatePrice);
-
+            var order1 = new Order("Ryan", 12345, true, 1000000, "Temp");
+            var order2 = new Order("Billy", 54321, false, 90000, "Temp");
             //Insert facts into rules engine's memory
             session.Insert(customer);
+            session.Insert(order1);
+            session.Insert(order2);
             //session.Insert(rate);
 
             //Start match/resolve/act cycle

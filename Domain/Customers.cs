@@ -17,12 +17,14 @@ namespace Manulife.Domain
         public string[] PreExisingConditions { get; set; }
         public bool IsSmoker { get; set; }
         public int MSinceHospital { get; set; }
-        public bool LookingForNewRate { get; set; }
+        public bool EligibleForNewRate { get; set; }
         public int PolicyMaximum { get; set; }
-        public int InsuranceType { get; set; }
+        public string InsuranceType { get; set; }
+        public int ID { get; set; }
+  
         // Universal, Participating, Term
     
-        public Customer(string name, int age, string occupation, string gender, string[] preExistingCondition, bool isSmoker, int mSinceHospital, bool lookingForNewRate, int policyMaximum)
+        public Customer(string name, int age, string occupation, string gender, string[] preExistingCondition, bool isSmoker, int mSinceHospital, bool eligibleForNewRate, int policyMaximum, string insuranceType, int iD)
         {
             Name = name;
             Age = age;
@@ -31,8 +33,10 @@ namespace Manulife.Domain
             PreExisingConditions = preExistingCondition;
             IsSmoker = isSmoker;
             MSinceHospital = mSinceHospital;
-            LookingForNewRate = lookingForNewRate;
+            EligibleForNewRate = eligibleForNewRate;
             PolicyMaximum = policyMaximum;
+            InsuranceType = insuranceType;
+            ID = iD;
         }
     }
 
@@ -44,7 +48,9 @@ namespace Manulife.Domain
             "PreExisingConditions": ["", ""],
             "IsSmoker": ,
             "MSinceHospital": ,
-            "LookingForNewRate": ,
+            "EligibleForNewRate": ,
             "PolicyMaximum": ,
+            "InsuranceType" "",
+            "ID": 
             }*/
 }
