@@ -44,21 +44,6 @@ namespace Manulife
         }
     }
 
-    // public class DiscountNotificationRule : Rule
-    // {
-    //     public override void Define()
-    //     {
-    //         Customer customer = null;
-
-    //         When()
-    //             .Match<Customer>(() => customer);
-
-    //         Then()
-    //             OutputString.responseMessage = "Discount Notification";
-    //     }
-    // }
-
-
     public static class NRules_HTTP_Trigger
     {
         [FunctionName("NRules_HTTP_Trigger")]
@@ -68,6 +53,7 @@ namespace Manulife
         {
             //Getting Request Body and Parsing
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            OutputString.responseMessage = "Not Eligible for Rate Change";
 
             JObject data = JObject.Parse(requestBody);
             string Name = (string)data.SelectToken("Name");
@@ -81,7 +67,8 @@ namespace Manulife
             bool EligibleForNewRate = (bool)data.SelectToken("EligibleForNewRate");
             string InsuranceType = (string)data.SelectToken("InsuranceType");
             int ID = (int)data.SelectToken("ID");
-            
+            int PolicyMaximumORDER = (int)data.SelectToken("PolicyMaximumORDER");
+            string InsuranceTypeORDER = (string)data.SelectToken("InsuranceTypeORDER");
             /*{
             "Name": "",
             "Age": ,
@@ -94,6 +81,8 @@ namespace Manulife
             "PolicyMaximum": ,
             "InsuranceType": "",
             "ID":
+            "PolicyMaximumORDER": ,
+            "InsuranceTypeORDER": ""
             }*/
             
             //Load rules
@@ -109,12 +98,12 @@ namespace Manulife
             //Load domain model
             var customer = new Customer(Name, Age, Occupation, Gender, PreExisingConditions.ToObject<string[]>(), IsSmoker, MSinceHospital, EligibleForNewRate, PolicyMaximum, InsuranceType, ID);
             //var rate = new Rate(ID, customer, RatePrice);
-            var order1 = new Order("Ryan", 12345, true, 1000000, "Temp");
-            var order2 = new Order("Billy", 54321, false, 90000, "Temp");
+            var order1 = new Order("Ryan", 12345, true, PolicyMaximumORDER, InsuranceTypeORDER);
+            //var order2 = new Order("Billy", 54321, false, 90000, "Participating");
             //Insert facts into rules engine's memory
             session.Insert(customer);
             session.Insert(order1);
-            session.Insert(order2);
+            //session.Insert(order2);
             //session.Insert(rate);
 
             //Start match/resolve/act cycle
@@ -126,7 +115,7 @@ namespace Manulife
 
             OutputString.responseMessage += string.IsNullOrEmpty(Name)
                 ? "\nThis HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"\nHello, {Name}. This HTTP triggered function executed successfully.";
+                : $"";
 
             return new OkObjectResult(OutputString.responseMessage);
         }
